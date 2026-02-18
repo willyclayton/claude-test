@@ -1,6 +1,7 @@
 import os
 import requests
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from flask import Flask
 from dotenv import load_dotenv
 
@@ -25,7 +26,7 @@ def get_trains():
     etas = response.json()["ctatt"]["eta"]
 
     trains = []
-    now = datetime.now()
+    now = datetime.now(ZoneInfo("America/Chicago")).replace(tzinfo=None)
     for eta in etas:
         if eta.get("rt") not in ("Brn", "P") or eta.get("trDr") != "5":
             continue
