@@ -31,6 +31,8 @@ def get_trains():
             continue
         arr_time = datetime.fromisoformat(eta["arrT"])
         minutes = round((arr_time - now).total_seconds() / 60)
+        if minutes < 0:
+            continue
         trains.append({
             "route": "Brown" if eta["rt"] == "Brn" else "Purple",
             "dest": eta.get("destNm", ""),
@@ -58,6 +60,9 @@ def index():
         else:
             urgency = "ok"
             message = f"Leave in ~{next_catchable['minutes'] - WALK_MINUTES} min"
+    elif trains:
+        urgency = "none"
+        message = "No catchable trains — next one is too close"
     else:
         urgency = "none"
         message = "No trains available"
